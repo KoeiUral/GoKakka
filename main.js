@@ -1,6 +1,5 @@
 
-const MAX_WALKERS = 3;
-const PLAYER_ON = true;
+
 
 let walkers = [];
 let player;
@@ -11,7 +10,9 @@ function setup() {
   //synth = new p5.MonoSynth();
   //palette = [color(255, 0, 0), color(0, 255, 0), color(0, 0, 255)];
 
+  /* Initialize global variables */
   initDirections();
+  normalizeProbabilities();
   
   if (PLAYER_ON) {
     player = new Player();
@@ -19,7 +20,7 @@ function setup() {
   }
   
   for (let i = 0; i < MAX_WALKERS - PLAYER_ON; i++) {
-    walkers.push(new Walker(undefined, undefined, 0.5, 0.5, 1));
+    walkers.push(new Walker(undefined, undefined, WALKER_GREEDY, WALKER_SCARE, WALKER_SPEED));
   }
   
   // Set relations -> prey, predator

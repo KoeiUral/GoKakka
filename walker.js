@@ -15,9 +15,19 @@ const KEY_D = 68;
 const SCORE_THRESHOLD = 2; // Distance threshold for scoring
 const DELTA_SCORE = 10; // Score increment/decrement value
 const WRAP_ENABLE = false; // If True, walkers can wrap around the screen
+const ROAM_PROB = 0.1; // Probability of roaming
+const CHASE_PROB = 0.3; // Probability of chasing
+const FLEE_PROB = 0.6; // Probability of fleeing
+const MAX_WALKERS = 3; // Maximum number of walkers in the simulation
+const PLAYER_ON = true; // If True, a player-controlled walker is added to the simulation
+const WALKER_SPEED = 1; // Speed of the walkers
+const PLAYER_SPEED = 1; // Speed of the player-controlled walker
+const WALKER_GREEDY = 0.5; // Greedy ratio for the walkers
+const WALKER_SCARE = 0.5; // Scare ratio for the walkers
 
 /* Array of possible movement directions */
 let directions = [];
+let probabilities = [];
 
 function initDirections() {
   directions = [
@@ -28,6 +38,10 @@ function initDirections() {
   ];
 } 
 
+function normalizeProbabilities() {
+  let totalProb = ROAM_PROB + CHASE_PROB + FLEE_PROB;
+  probabilities = [ROAM_PROB, ROAM_PROB + CHASE_PROB, FLEE_PROB].map(p => p / totalProb);
+}
 
 /**
  * The WALKER class implements a simple agent that can roam, chase and flee.
@@ -193,9 +207,9 @@ class Walker {
   update() {
     let moveProb = random();
     
-    if (moveProb < 0.1) {
+    if (moveProb < probabilities[0]) {
       this.roam();
-    } else if (moveProb < 0.4) {
+    } else if (moveProb < probabilities[1]) {
       this.chase();
     } else {
       this.flee();
@@ -236,7 +250,7 @@ class Walker {
 class Player extends Walker {
   constructor() {
     /* Initialize the player at the center of the screen */
-    super(round(COLS / 2), round(ROWS / 2), 0.5, 0.5, 1);
+    super(round(COLS / 2), round(ROWS / 2), WALKER_GREEDY, WALKER_SCARE, PLAYER_SPEED);
 
     /* Set STATIC player's color */
     this.color = color(255, 0, 255);
