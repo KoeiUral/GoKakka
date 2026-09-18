@@ -1,12 +1,17 @@
 
-const MAX_WALKERS = 6;
-const PLAYER_ON = 1;
+const MAX_WALKERS = 3;
+const PLAYER_ON = true;
+
+let walkers = [];
+let player;
+
 
 function setup() {
   createCanvas(WIN_WIDTH, WIN_HEIGHT);
-  synth = new p5.MonoSynth();
-  
-  palette = [color(255, 0, 0), color(0, 255, 0), color(0, 0, 255)];
+  //synth = new p5.MonoSynth();
+  //palette = [color(255, 0, 0), color(0, 255, 0), color(0, 0, 255)];
+
+  initDirections();
   
   if (PLAYER_ON) {
     player = new Player();
@@ -14,7 +19,7 @@ function setup() {
   }
   
   for (let i = 0; i < MAX_WALKERS - PLAYER_ON; i++) {
-    walkers.push(new Walker());
+    walkers.push(new Walker(undefined, undefined, 0.5, 0.5, 1));
   }
   
   // Set relations -> prey, predator
@@ -32,7 +37,7 @@ function draw() {
 
     //move and draw the walkers
     for (let walker of walkers) {
-      walker.move();
+      walker.update();
       walker.show();
     }
   

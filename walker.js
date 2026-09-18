@@ -1,175 +1,278 @@
+/**
+ * Walker.js
+ * 
+ * This file implements the Walker class, which is used to create the prey and predator 
+ * agents in the simulation.
+ */
+
+
+/* ASCII code for the Player controller */
 const KEY_W = 87;
 const KEY_A = 65;
 const KEY_S = 83;
 const KEY_D = 68;
 
+const SCORE_THRESHOLD = 2; // Distance threshold for scoring
+const DELTA_SCORE = 10; // Score increment/decrement value
+const WRAP_ENABLE = false; // If True, walkers can wrap around the screen
+
+/* Array of possible movement directions */
+let directions = [];
+
+function initDirections() {
+  directions = [
+    createVector(1, 0),  // right
+    createVector(-1, 0), // left
+    createVector(0, 1),  // down
+    createVector(0, -1)  // up
+  ];
+} 
 
 
-let palette = [];
-let walkers = [];
-let player;
-
-let synth;
-
-
-
+/**
+ * The WALKER class implements a simple agent that can roam, chase and flee.
+ * It is used to create the prey and predator agents in the simulation.
+ * The Walker holds several characteristics such as position (vector), color, score and velocity (scalar),
+ * greedy ratio and scare ratio (1 - greedy ratio).
+ * It also holds references to its prey and predator agents.  
+ */
 class Walker {
-  constructor(x, y) {
+  constructor(x, y, greedy, scare, speed) {
     if (x == undefined || y == undefined) {
-      this.posX = floor(random(COLS));
-      this.posY = floor(random(ROWS));
-      //this.pos = createVector(floor(random(COLS)), floor(random(ROWS)));
+      /* Create the Walker in a random position on screen */
+      this.pos = createVector(floor(random(COLS)), floor(random(ROWS)));
     } else {
-      this.posX = x;
-      this.posY = y;
-      //this.pos = createVector(x, y);
+      this.pos = createVector(x, y);
     }
     
-    this.color = random(palette);
-    this.score = 0;
-    this.vel = 1;
+    /**
+     * Set the Walker main characteristics, greedy is a scale factor [0-1] foe how much the walker is 
+     * abtracted by its prey and consecutive how much scared by its predator, as scare = 1 - greedy
+     */
+    this.speed = speed;
+    this.greedyRatio = greedy;
+    this.scareRatio = scare;
 
+    /* Consmetic fields */
+    this.color = color(random(255), random(255), random(255));;
+    this.score = 0;
+
+    /* Pointers to walker's prey and predator */
     this.prey = undefined;
     this.predator = undefined;
   }
-  
-  setTarget(prey, predator, walkerList) {
-    this.prey = walkerList[prey];
-    this.predator = walkerList[predator];
+
+
+  /**
+   * 
+   * @param {*} preyId: prey index in the walkers array
+   * @param {*} predator: predator index in the walkers array
+   * @param {*} walkerList: walkers array
+   */
+  setTarget(preyId, predatorId, walkerList) {
+    this.prey = walkerList[preyId];
+    this.predator = walkerList[predatorId];
   }
   
-  // This function wrap the position over the grid
+
+  /**
+   * Wraps the walker's position around the grid boundaries
+   */
   wrap() {
-    if (this.posX >= COLS) {
-      this.posX = 0;
-    } else if (this.posX < 0) {
-      this.posX = COLS - 1;         
+    if (this.pos.values[0] >= COLS) {
+      this.pos.values[0] = 0;
+    } else if (this.pos.values[0] < 0) {
+      this.pos.values[0] = COLS - 1;         
     }
 
-    if (this.posY >= ROWS) {
-      this.posY = 0;
-    } else if (this.posY < 0) {
-      this.posY = ROWS - 1;         
+    if (this.pos.values[1] >= ROWS) {
+      this.pos.values[1] = 0;
+    } else if (this.pos.values[1] < 0) {
+      this.pos.values[1] = ROWS - 1;         
     }
   }
 
+
+  /**
+   * Bounds the walker's position within the grid boundaries
+   */
   boud() {
-    if (this.posX >= COLS) {
-      this.posX = COLS;
-    } else if (this.posX < 0) {
-      this.posX = 0;         
+    if (this.pos.values[0] >= COLS) {
+      this.pos.values[0] = COLS - 1;
+    } else if (this.pos.values[0] < 0) {
+      this.pos.values[0] = 0;         
     }
 
-    if (this.posY >= ROWS) {
-      this.posY = ROWS;
-    } else if (this.posY < 0) {
-      this.posY = 0;         
+    if (this.pos.values[1] >= ROWS) {
+      this.pos.values[1] = ROWS - 1;
+    } else if (this.pos.values[1] < 0) {
+      this.pos.values[1] = 0;         
     }
   }
-  
+
+
+  /**
+   * Roam move the walker in a random direction (up, down, left, right) by one cell
+   */
   roam() {
-    let direction = floor(random(4));
+    /* Pick up a random direction */
+    let direction = directions[floor(random(directions.length))];
+
+    /* Add direction to walker position. */
+    this.pos.add(direction);
+  }
+
+
+  /**
+   * Move the walker towards/way from its prey/predator. The move is calculated as a vector 
+   * from the walker to its target, scaled by the walker's velocity. 
+   * @param {*} kPrey: scaling factor towards the prey
+   * @param {*} kPredator: scaling factor away from the predator
+   */
+  move(kPrey, kPredator) {
+    if ((this.prey != undefined) && (this.predator != undefined)) {
+      /* Compute the direction vector between walker and its prey */
+      let posPrey = p5.Vector.sub(this.prey.pos, this.pos).normalize(); // Chease
+
+      /**
+       * Compute the direction vector predator and walker, it is inverted wrt prey cause it is 
+       * inverted, i.e. a negative direction
+       */
+      let posPredator = p5.Vector.sub(this.pos, this.predator.pos).normalize(); // Flee
+
+      /* Weight the vectors by the walker's velocity towards/away from its prey/predator */
+      posPrey.mult(kPrey);
+      posPredator.mult(kPredator);
     
-    switch (direction) {
-      case 0:
-        this.posX = this.posX + 1;
-        break;
-      case 1:
-        this.posX = this.posX - 1;
-        break;
-      case 2:
-        this.posY = this.posY + 1;
-        break;
-      case 3:
-        this.posY = this.posY - 1;
-        break;
+      /* Compute the movement vector */
+      let vel = p5.Vector.add(posPrey, posPredator);// * this.speed;
+      //vel.values[0] = round(vel.values[0] * this.speed);
+      //vel.values[1] = round(vel.values[1] * this.speed);
+
+      /* Add velocity to position */
+      this.pos.add(vel);
+
+    } else {
+      console.log("Walker has no prey or predator");  //TOOD: fix the debug messages
     }
-      
   }
-  
+
+
+  /**
+   * Move the walker MOSTLY towards its prey.
+   */
   chase() {
-    if (this.prey != undefined) {
-      let d = dist(this.posX, this.posY, this.prey.posX, this.prey.posY);
-
-      if (d != 0) {
-        this.posX += round((this.prey.posX - this.posX) * this.vel / d);
-        this.posY += round((this.prey.posY - this.posY) * this.vel / d);
-      } else {
-        this.score += 10;
-      }
-    }
+    this.move(this.greedyRatio , 1 - this.greedyRatio);
   }
+
   
+  /**
+   * Move the walker MOSTLY away from its predator.
+   */
   flee() {
-    if (this.predator != undefined) {
-      let d = dist(this.posX, this.posY, this.predator.posX, this.predator.posY);
-
-      if (d != 0) {
-        this.posX -= round((this.predator.posX - this.posX) * this.vel / d);
-        this.posY -= round((this.predator.posY - this.posY) * this.vel / d);
-      } else {
-        this.score -= 10;
-      }
-    }
+    this.move(1 - this.scareRatio, this.scareRatio);
   }
   
-  move() {
+  /**
+   * Check if the player has collided with its prey or predator. If the player collides with its prey,
+   * its score increases by 10, if it collides with its predator, its score decreases by 10.
+   */
+  check() {
+    let distPrey = this.pos.dist(this.prey.pos);
+    let distPredator = this.pos.dist(this.predator.pos);
+
+    if (distPrey < SCORE_THRESHOLD) {
+      this.score += DELTA_SCORE;
+    }
+  }
+
+  /**
+   * Update the walker's position based on a random probability. The walker can roam, chase or flee.
+   * If WRAP_ENABLE is true, the walker will wrap around the screen boundaries, otherwise it will be bounded.
+   */
+  update() {
     let moveProb = random();
     
-    if (moveProb < 0.05) {
+    if (moveProb < 0.1) {
       this.roam();
-    } else if (moveProb < 0.65) {
+    } else if (moveProb < 0.4) {
       this.chase();
     } else {
       this.flee();
     }
     
-    this.wrap(); 
+    if (WRAP_ENABLE) {
+      this.wrap(); 
+    } else {
+      this.boud();
+    }
+
+    /* Update the score */
+    this.check();
   }
-  
+
+
+  /**
+   * Show the walker on the screen as a rectangle with its color and position.
+   */
   show() {
-    let x = this.posX * CELL_SIZE + FRAME_SIZE;
-    let y = this.posY * CELL_SIZE + FRAME_SIZE;
+    let x = this.pos.values[0] * CELL_SIZE + FRAME_SIZE;
+    let y = this.pos.values[1] * CELL_SIZE + FRAME_SIZE;
     
     noStroke();
     fill(this.color);
     rect(x, y, CELL_SIZE);
   }
+
 }
 
 
+/**
+ * The PLAYER class extends the Walker class and implements a player-controlled agent. 
+ * The player can move using the WASD keys or the arrow keys.
+ * The player has a score that increases when it collides with its prey and decreases when it collides 
+ * with its predator.
+ */
 class Player extends Walker {
   constructor() {
-    super(round(COLS / 2), round(ROWS / 2));
+    /* Initialize the player at the center of the screen */
+    super(round(COLS / 2), round(ROWS / 2), 0.5, 0.5, 1);
+
+    /* Set STATIC player's color */
     this.color = color(255, 0, 255);
   }
-  
-  move () {
+
+
+  /**
+   * Move the player based on the keyboard input. The player can move up, down, left or right using
+   * the WASD keys or the arrow keys. If WRAP_ENABLE is true, the player will wrap around the screen 
+   * boundaries, otherwise it will be bounded.
+   */
+  update() {
+    let direction = createVector(0, 0);
+
     if (keyIsDown(KEY_A) || keyIsDown(LEFT_ARROW)) {
-      this.posX = this.posX - 1;
+      direction = createVector(-1, 0); //TODO: Replace with const array element
     }
     if (keyIsDown(KEY_D) || keyIsDown(RIGHT_ARROW)) {
-      this.posX = this.posX + 1;
+      direction = createVector(1, 0);
     } 
     if (keyIsDown(KEY_W) || keyIsDown(UP_ARROW)) {
-      this.posY = this.posY - 1;
+      direction = createVector(0, -1);
     } 
     if (keyIsDown(KEY_S) || keyIsDown(DOWN_ARROW)) {
-      this.posY = this.posY + 1;
+      direction = createVector(0, 1);
     }
     
-    this.wrap();
+    this.pos.add(direction);
+
+    if (WRAP_ENABLE) {
+      this.wrap();
+    } else {
+      this.boud();
+    }
+
     this.check();
   }
-  
-  check() {
-    if ((this.posX == this.prey.posX) && (this.posY == this.prey.posY)) {
-      this.score += 10;
-      synth.play('G4', 1, 0, 1/6);
-    } else if ((this.posX == this.predator.posX) && (this.posY == this.predator.posY)) {
-      this.score -= 10;
-      synth.play('C2', 1, 0, 1/6);
-    }
-  }
-  
+
 }
