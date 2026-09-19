@@ -12,6 +12,11 @@ const KEY_A = 65;
 const KEY_S = 83;
 const KEY_D = 68;
 
+const RIGHT = 0;
+const LEFT = 1;
+const DOWN = 2;
+const UP = 3;
+
 const SCORE_THRESHOLD = 2; // Distance threshold for scoring
 const DELTA_SCORE = 10; // Score increment/decrement value
 const WRAP_ENABLE = false; // If True, walkers can wrap around the screen
@@ -110,7 +115,7 @@ class Walker {
   /**
    * Bounds the walker's position within the grid boundaries
    */
-  boud() {
+  bound() {
     if (this.pos.values[0] >= COLS) {
       this.pos.values[0] = COLS - 1;
     } else if (this.pos.values[0] < 0) {
@@ -218,7 +223,7 @@ class Walker {
     if (WRAP_ENABLE) {
       this.wrap(); 
     } else {
-      this.boud();
+      this.bound();
     }
 
     /* Update the score */
@@ -263,27 +268,29 @@ class Player extends Walker {
    * boundaries, otherwise it will be bounded.
    */
   update() {
-    let direction = createVector(0, 0);
+    let dirId = undefined;
 
     if (keyIsDown(KEY_A) || keyIsDown(LEFT_ARROW)) {
-      direction = createVector(-1, 0); //TODO: Replace with const array element
+      dirId = LEFT;
     }
     if (keyIsDown(KEY_D) || keyIsDown(RIGHT_ARROW)) {
-      direction = createVector(1, 0);
+      dirId = RIGHT;
     } 
     if (keyIsDown(KEY_W) || keyIsDown(UP_ARROW)) {
-      direction = createVector(0, -1);
+      dirId = UP;
     } 
     if (keyIsDown(KEY_S) || keyIsDown(DOWN_ARROW)) {
-      direction = createVector(0, 1);
+      dirId = DOWN;
     }
     
-    this.pos.add(direction);
+    if (dirId != undefined) {
+      this.pos.add(directions[dirId]);
+    }
 
     if (WRAP_ENABLE) {
       this.wrap();
     } else {
-      this.boud();
+      this.bound();
     }
 
     this.check();
