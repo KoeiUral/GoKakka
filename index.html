@@ -3,16 +3,58 @@
   <head>
     <script src="https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5.sound@0.4.1/dist/p5.sound.min.js"></script>
+    <script src="conf.js"></script>    
+    <script src="gui.js"></script>
+    <script src="walker.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
-
   </head>
   <body>
+      <script src="main.js"></script>
+  
+      <div class="flex-container_H">
+        <div id="html_canvas"></div>
+
+        <div class="flex-container_V" id="gui">
+          <div class="flex-container_H">
+            <div>Roam Prob:</div>
+            <div id="html_roamPSlider"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Flee Prob:</div>
+            <div id="html_fleePSlider"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Chase Prob:</div>
+            <div id="html_chasePSlider"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Greedy Factor:</div>
+            <div id="html_greedySlider"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Scare Factor:</div>
+            <div id="html_scareSlider"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Max Walkers:</div>
+            <div id="html_maxWalkersInput"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Walker Speed:</div>
+            <div id="html_walkerSpeedInput"></div>
+          </div>
+          <div class="flex-container_H">
+            <div>Player Speed:</div>
+            <div id="html_playerSpeedInput"></div>
+          </div>
+          <div class="flex-container_H">
+            <div id="html_wrapEnabledCheck"></div>
+          </div>
+        </div>
+      </div>
+
     <main>
     </main>
-      <script src="conf.js"></script>    
-      <script src="gui.js"></script>
-      <script src="walker.js"></script>
-      <script src="main.js"></script>
   </body>
 </html>

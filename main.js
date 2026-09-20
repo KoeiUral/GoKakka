@@ -6,9 +6,8 @@ let player;
 
 
 function setup() {
-  createCanvas(WIN_WIDTH, WIN_HEIGHT);
-  //synth = new p5.MonoSynth();
-  //palette = [color(255, 0, 0), color(0, 255, 0), color(0, 0, 255)];
+  myCanvas = createCanvas(WIN_WIDTH, WIN_HEIGHT);
+  createHTLMGui();
 
   /* Initialize global variables */
   initDirections();

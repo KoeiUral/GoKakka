@@ -16,16 +16,17 @@ const UP = 3;
 
 const SCORE_THRESHOLD = 2; // Distance threshold for scoring
 const DELTA_SCORE = 10; // Score increment/decrement value
-const WRAP_ENABLE = false; // If True, walkers can wrap around the screen
-const ROAM_PROB = 0.1; // Probability of roaming
-const CHASE_PROB = 0.3; // Probability of chasing
-const FLEE_PROB = 0.6; // Probability of fleeing
-const MAX_WALKERS = 3; // Maximum number of walkers in the simulation
 const PLAYER_ON = true; // If True, a player-controlled walker is added to the simulation
-const WALKER_SPEED = 1; // Speed of the walkers
-const PLAYER_SPEED = 1; // Speed of the player-controlled walker
-const WALKER_GREEDY = 0.5; // Greedy ratio for the walkers
-const WALKER_SCARE = 0.5; // Scare ratio for the walkers
+
+let WRAP_ENABLE = false; // If True, walkers can wrap around the screen
+let ROAM_PROB = 0.1; // Probability of roaming
+let CHASE_PROB = 0.3; // Probability of chasing
+let FLEE_PROB = 0.6; // Probability of fleeing
+let WALKER_GREEDY = 0.5; // Greedy ratio for the walkers
+let WALKER_SCARE = 0.5; // Scare ratio for the walkers
+let MAX_WALKERS = 3; // Maximum number of walkers in the simulation
+let WALKER_SPEED = 1; // Speed of the walkers
+let PLAYER_SPEED = 1; // Speed of the player-controlled walker
 
 /* Array of possible movement directions */
 let directions = [];
