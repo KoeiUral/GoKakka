@@ -5,7 +5,7 @@ Weird puzzle game: not yet clear how to play
 
 ## TODO
 - [Walker]: Add trail to each walker
-- ~~[Gui]: Move config parameter in a file  **DONE** ~~
+- ~~[Gui]: Move config parameter in a file  **DONE**~~
 - ~~[Gui]: Add HTML widgets to make parameters configurable **DONE**~~
 - [Walker]: Add sprites
 - [Game]: Add timer 30s, after that walker with higher score win
