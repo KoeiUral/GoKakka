@@ -1,10 +1,19 @@
+/**
+ * main.js
+ * 
+ * This file contains the main logic for the simulation, including setup and draw functions.
+ * It initializes the walkers, handles their updates, and manages the GUI elements.
+ */
 
-
-
+/* Global main variables for list of walkers and single player */
 let walkers = [];
 let player;
 
 
+/**
+ * Sets up the simulation environment, initializes walkers, and configures the GUI.
+ * It also sets the relationships between walkers as prey and predator.
+ */
 function setup() {
   myCanvas = createCanvas(WIN_WIDTH, WIN_HEIGHT);
   createHTLMGui();
@@ -29,6 +38,11 @@ function setup() {
     
 }
 
+
+/**
+ * Draws the simulation frame, including the grid and all walkers.
+ * The draw function is called repeatedly by p5.js to update the simulation.
+ */
 function draw() {
   if((frameCount % 3) == 0) {
     background(50);
