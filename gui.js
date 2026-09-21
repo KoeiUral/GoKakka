@@ -78,39 +78,39 @@ function createHTLMGui() {
     /* Hook the canvas */
     myCanvas.parent('html_canvas');
 
-    roamProbSlider = createSlider(0, 1, 0.1, 0.01);
+    roamProbSlider = createSlider(0, 1, ROAM_PROB, 0.01);
     roamProbSlider.size(WIDGET_SIZE * 2);
     roamProbSlider.changed(updateRoamProb);
 
-    fleeProbSlider = createSlider(0, 1, 0.6, 0.01);
+    fleeProbSlider = createSlider(0, 1, FLEE_PROB, 0.01);
     fleeProbSlider.size(WIDGET_SIZE * 2);
     fleeProbSlider.changed(updateFleeProb);
 
-    chaseProbSlider = createSlider(0, 1, 0.3, 0.01);
+    chaseProbSlider = createSlider(0, 1, CHASE_PROB, 0.01);
     chaseProbSlider.size(WIDGET_SIZE * 2);
     chaseProbSlider.changed(updateChaseProb);
 
-    greedySlider = createSlider(0, 1, 0.5, 0.01);
+    greedySlider = createSlider(0, 1, WALKER_GREEDY, 0.01);
     greedySlider.size(WIDGET_SIZE * 2);
     greedySlider.changed(updateGreedy);
 
-    scareSlider = createSlider(0, 1, 0.5, 0.01);
+    scareSlider = createSlider(0, 1, WALKER_SCARE, 0.01);
     scareSlider.size(WIDGET_SIZE * 2);
     scareSlider.changed(updateScare);
 
-    maxWalkersInput = createInput(3);
+    maxWalkersInput = createInput(MAX_WALKERS);
     maxWalkersInput.size(WIDGET_SIZE);
     maxWalkersInput.changed(updateMaxWalkers);
 
-    walkerSpeedInput = createInput(1);
+    walkerSpeedInput = createInput(WALKER_SPEED);
     walkerSpeedInput.size(WIDGET_SIZE);
     walkerSpeedInput.changed(updateWalkerSpeed);
 
-    playerSpeedInput = createInput(1);
+    playerSpeedInput = createInput(PLAYER_SPEED);
     playerSpeedInput.size(WIDGET_SIZE);
     playerSpeedInput.changed(updatePlayerSpeed);
 
-    wrapEnabledCheck = createCheckbox('WRAP', false);
+    wrapEnabledCheck = createCheckbox('WRAP', WRAP_ENABLE);
     wrapEnabledCheck.changed(wrapCheckEvent);
 
     /* Hook widget to html */
