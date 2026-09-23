@@ -7,6 +7,7 @@ const KEY_W = 87;
 const KEY_A = 65;
 const KEY_S = 83;
 const KEY_D = 68;
+const KEY_P = 80;
 
 /* Indexes for the directions array */
 const RIGHT = 0;
@@ -50,5 +51,8 @@ function initDirections() {
  */
 function normalizeProbabilities() {
   let totalProb = ROAM_PROB + CHASE_PROB + FLEE_PROB;
-  probabilities = [ROAM_PROB, ROAM_PROB + CHASE_PROB, FLEE_PROB].map(p => p / totalProb);
+  probabilities = [ROAM_PROB, CHASE_PROB, FLEE_PROB].map(p => p / totalProb);
+
+  console.log("Normalized Probabilities: ", probabilities);
+
 }
