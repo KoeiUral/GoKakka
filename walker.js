@@ -37,6 +37,9 @@ class Walker {
     /* Pointers to walker's prey and predator */
     this.prey = undefined;
     this.predator = undefined;
+
+    /* Sliding window buffer for the walker's trail */
+    this.prevPos = []; 
   }
 
 
@@ -199,8 +202,31 @@ class Walker {
       this.bound();
     }
 
+    if (TRAIL_ON) {
+      this.storeTrail();
+    }
+
     /* Update the score */
     this.check();
+  }
+
+
+  /**
+   * Store the current position in the sliding window buffer. The buffer is used to draw the walker's trail.
+   * The buffer is implemented as a circular array of length TRAIL_LEN. When the buffer is full, the oldest position is removed.
+   */
+  storeTrail() {
+    /* Updated the sliding window buffer */
+    this.prevPos.push(this.pos.copy());
+
+    /* Remove the oldest positions if the buffer is full */
+    let trailLength = this.prevPos.length;
+
+    /* As TRAIL_LEN can be changed during the simulation, we need to check if the buffer 
+     * is full and remove the oldest positions, maybe more than one */
+    if (trailLength > TRAIL_LEN) {
+      this.prevPos.splice(0, trailLength - TRAIL_LEN);
+    }
   }
 
 
@@ -208,14 +234,29 @@ class Walker {
    * Show the walker on the screen as a rectangle with its color and position.
    */
   show() {
-    let x = this.pos.values[0] * CELL_SIZE + FRAME_SIZE;
-    let y = this.pos.values[1] * CELL_SIZE + FRAME_SIZE;
+    let x;
+    let y;
     
+    noStroke();
+
+    /* Draw the walker's trail first */
+    if (TRAIL_ON) {
+       for (let i = 0; i < this.prevPos.length; i++) {
+            x = this.prevPos[i].values[0] * CELL_SIZE + FRAME_SIZE;
+            y = this.prevPos[i].values[1] * CELL_SIZE + FRAME_SIZE;
+            fill(this.color._getRed(), this.color._getGreen(), this.color._getBlue(), TRAIL_DELTA * i);
+            rect(x, y, CELL_SIZE);
+        }
+    }
+
+    /* Then draw the walker */
+    x = this.pos.values[0] * CELL_SIZE + FRAME_SIZE;
+    y = this.pos.values[1] * CELL_SIZE + FRAME_SIZE;
+
     noStroke();
     fill(this.color);
     rect(x, y, CELL_SIZE);
   }
-
 }
 
 
@@ -264,6 +305,10 @@ class Player extends Walker {
       this.wrap();
     } else {
       this.bound();
+    }
+
+    if (TRAIL_ON) {
+      this.storeTrail();
     }
 
     this.check();

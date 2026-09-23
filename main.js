@@ -65,10 +65,7 @@ function draw() {
     drawGrid();
 
     if (PAUSED) {
-      fill(255);
-      textSize(32);
-      textAlign(CENTER, CENTER);
-      text("PAUSED", WIN_WIDTH / 2, WIN_HEIGHT / 2);
+      showPauseMsg();
     } else {
       // Move and draw the walkers
       for (let walker of walkers) {

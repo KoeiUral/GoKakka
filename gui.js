@@ -21,6 +21,8 @@ let maxWalkersInput;
 let walkerSpeedInput;
 let playerSpeedInput;
 let wrapEnabledCheck;
+let trailEnabledCheck;
+let walkerTrailInput;
 
 /* Update functions for GUI elements */
 function updateRoamProb() {
@@ -75,6 +77,18 @@ function wrapCheckEvent() {
   WRAP_ENABLE = wrapEnabledCheck.checked();
 }
 
+function trailCheckEvent() {
+  TRAIL_ON = trailEnabledCheck.checked();
+}
+
+function updateWalkerTrail() {
+  let tempVal = parseInt(walkerTrailInput.value());
+  if (isNaN(tempVal) === false && tempVal > 0) {
+      TRAIL_LEN = tempVal;
+      TRAIL_DELTA = 255 / TRAIL_LEN;
+  }
+}
+
 
 /**
  * Handles key presses for controlling the simulation. The 'P' key toggles the paused state of the simulation.
@@ -112,20 +126,27 @@ function createHTLMGui() {
     scareSlider.size(WIDGET_SIZE * 2);
     scareSlider.changed(updateScare);
 
-    maxWalkersInput = createInput(MAX_WALKERS);
+    maxWalkersInput = createInput(MAX_WALKERS.toString());
     maxWalkersInput.size(WIDGET_SIZE);
     maxWalkersInput.changed(updateMaxWalkers);
 
-    walkerSpeedInput = createInput(WALKER_SPEED);
+    walkerSpeedInput = createInput(WALKER_SPEED.toString());
     walkerSpeedInput.size(WIDGET_SIZE);
     walkerSpeedInput.changed(updateWalkerSpeed);
 
-    playerSpeedInput = createInput(PLAYER_SPEED);
+    playerSpeedInput = createInput(PLAYER_SPEED.toString());
     playerSpeedInput.size(WIDGET_SIZE);
     playerSpeedInput.changed(updatePlayerSpeed);
 
     wrapEnabledCheck = createCheckbox('WRAP', WRAP_ENABLE);
     wrapEnabledCheck.changed(wrapCheckEvent);
+
+    trailEnabledCheck = createCheckbox('TRAIL', TRAIL_ON);
+    trailEnabledCheck.changed(trailCheckEvent);
+
+    walkerTrailInput = createInput(TRAIL_LEN.toString());
+    walkerTrailInput.size(WIDGET_SIZE);
+    walkerTrailInput.changed(updateWalkerTrail);
 
     /* Hook widget to html */
     roamProbSlider.parent('html_roamPSlider');
@@ -136,7 +157,9 @@ function createHTLMGui() {
     maxWalkersInput.parent('html_maxWalkersInput');
     walkerSpeedInput.parent('html_walkerSpeedInput');
     playerSpeedInput.parent('html_playerSpeedInput');
+    walkerTrailInput.parent('html_walkerTrailInput');
     wrapEnabledCheck.parent('html_wrapEnabledCheck');
+    trailEnabledCheck.parent('html_trailEnabledCheck');
 
 }
 
@@ -159,6 +182,14 @@ function drawGrid() {
   }
 }
 
+function showPauseMsg() {
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("PAUSED", WIN_WIDTH / 2, WIN_HEIGHT / 2);
+}
+
+
 function showGui() {
   let x;
   let offset = 0;
@@ -168,6 +199,7 @@ function showGui() {
     fill(walker.color);
     rect(x, FRAME_SIZE/2, CELL_SIZE);
     textSize(32);
+    textAlign(CENTER, BOTTOM);
     text(walker.score, x + CELL_SIZE, FRAME_SIZE/2);
     
     offset += ((WIN_WIDTH - FRAME_SIZE) / 3);

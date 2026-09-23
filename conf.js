@@ -19,6 +19,7 @@ const SCORE_THRESHOLD = 2; // Distance threshold for scoring
 const DELTA_SCORE = 10; // Score increment/decrement value
 const PLAYER_ON = true; // If True, a player-controlled walker is added to the simulation
 
+
 let WRAP_ENABLE = false; // If True, walkers can wrap around the screen
 let ROAM_PROB = 0.1; // Probability of roaming
 let CHASE_PROB = 0.3; // Probability of chasing
@@ -28,6 +29,10 @@ let WALKER_SCARE = 0.8; // Scare ratio for the walkers
 let MAX_WALKERS = 3; // Maximum number of walkers in the simulation
 let WALKER_SPEED = 1; // Speed of the walkers
 let PLAYER_SPEED = 1; // Speed of the player-controlled walker
+let TRAIL_ON = true; // If True, walkers leave a trail behind them
+let TRAIL_LEN = 5; // Length of the trail for each walker
+let TRAIL_DELTA = 255 / TRAIL_LEN; // Opacity decrement for the trail
+
 
 /* Array of possible movement directions */
 let directions = [];

@@ -11,6 +11,7 @@ Weird puzzle game: not yet clear how to play
 - [Game]: Add timer 30s, after that walker with higher score win
 - [Sound]: Add Music, going faster and faster
 - [Sound]: Add sound every time player eats prey
+- ~~[Walker]: Add growing trail **DONE**~~
 - [Walker]: Make trail counts as walker in collision algo
 - [Game]: Add drop of GoKakka, in general add features dropping
 - [Gui]: Add nice random background (space, beach, sky)
