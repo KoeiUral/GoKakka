@@ -41,7 +41,8 @@ class Walker {
 
 
   /**
-   * 
+   * Set reference to the prey/prdator agents in the walkers array. The prey and predator are identified by their index in 
+   * the walkers array.
    * @param {*} preyId: prey index in the walkers array
    * @param {*} predator: predator index in the walkers array
    * @param {*} walkerList: walkers array
@@ -49,6 +50,19 @@ class Walker {
   setTarget(preyId, predatorId, walkerList) {
     this.prey = walkerList[preyId];
     this.predator = walkerList[predatorId];
+  }
+
+
+  /**
+   * Update the walker's characteristics, greedy, scare and speed.
+   * @param {*} greedy 
+   * @param {*} scare 
+   * @param {*} speed 
+   */
+  updateCharacteristics(greedy, scare, speed) {
+    this.greedyRatio = greedy;
+    this.scareRatio = scare;
+    this.speed = speed;
   }
   
 
@@ -122,7 +136,8 @@ class Walker {
       posPredator.mult(kPredator);
     
       /* Compute the movement vector */
-      let vel = p5.Vector.add(posPrey, posPredator);// * this.speed;
+      let vel = p5.Vector.add(posPrey, posPredator);
+      vel.mult(this.speed);
       //vel.values[0] = round(vel.values[0] * this.speed);
       //vel.values[1] = round(vel.values[1] * this.speed);
 
@@ -172,7 +187,7 @@ class Walker {
     
     if (moveProb < probabilities[0]) {
       this.roam();
-    } else if (moveProb < probabilities[1]) {
+    } else if (moveProb < probabilities[0] + probabilities[1]) {
       this.chase();
     } else {
       this.flee();
