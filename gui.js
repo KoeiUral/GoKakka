@@ -40,10 +40,12 @@ function updateChaseProb() {
 
 function updateGreedy() {
   GREEDY = greedySlider.value();
+  Walkers_UpdateCharacteristics();
 }
 
 function updateScare() {
   SCARE = scareSlider.value();
+  Walkers_UpdateCharacteristics();
 }
 
 function updateMaxWalkers() {
@@ -57,6 +59,7 @@ function updateWalkerSpeed() {
   let tempVal = parseFloat(walkerSpeedInput.value());
   if (isNaN(tempVal) === false) {
       WALKER_SPEED = tempVal;
+      Walkers_UpdateCharacteristics();
   }
 }
 
@@ -64,11 +67,22 @@ function updatePlayerSpeed() {
   let tempVal = parseFloat(playerSpeedInput.value());
   if (isNaN(tempVal) === false) {
       PLAYER_SPEED = tempVal;
+      // TODO: PLAYER_SPEED not really used so far, but we can implement it in the future if needed
   }
 }
 
 function wrapCheckEvent() {
   WRAP_ENABLE = wrapEnabledCheck.checked();
+}
+
+
+/**
+ * Handles key presses for controlling the simulation. The 'P' key toggles the paused state of the simulation.
+ */
+function keyPressed() {
+    if (keyCode === KEY_P) {
+      PAUSED = (PAUSED) ? false : true;
+    }
 }
 
 /**

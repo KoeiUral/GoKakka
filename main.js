@@ -9,6 +9,21 @@
 let walkers = [];
 let player;
 
+/* Global main variable for simulation paused state */
+let PAUSED = false;
+let SLOWDOWN_RATE = 3;
+
+/**
+ * Updates the characteristics of all walkers in the simulation based on the current global settings.
+ * This function is called whenever the user changes the greedy, scare, or speed settings in the GUI.
+ * It iterates through the list of walkers and updates their characteristics accordingly.
+ */
+function Walkers_UpdateCharacteristics() {
+  for (let walker of walkers) {
+    walker.updateCharacteristics(WALKER_GREEDY, WALKER_SCARE, WALKER_SPEED);
+  }
+}
+
 
 /**
  * Sets up the simulation environment, initializes walkers, and configures the GUI.
@@ -44,16 +59,23 @@ function setup() {
  * The draw function is called repeatedly by p5.js to update the simulation.
  */
 function draw() {
-  if((frameCount % 3) == 0) {
+  if((frameCount % SLOWDOWN_RATE) == 0) {
     background(50);
 
     drawGrid();
 
-    //move and draw the walkers
-    for (let walker of walkers) {
-      walker.update();
-      walker.show();
-    }
+    if (PAUSED) {
+      fill(255);
+      textSize(32);
+      textAlign(CENTER, CENTER);
+      text("PAUSED", WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    } else {
+      // Move and draw the walkers
+      for (let walker of walkers) {
+        walker.update();
+        walker.show();
+      }
+  }
   
     showGui();
   }
