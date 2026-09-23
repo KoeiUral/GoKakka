@@ -15,3 +15,4 @@ Weird puzzle game: not yet clear how to play
 - [Game]: Add drop of GoKakka, in general add features dropping
 - [Gui]: Add nice random background (space, beach, sky)
 - [Walker]: Add walker size, size grows with score
+- [Walker]: Add Sprite of Walker eating walker once two are closed
