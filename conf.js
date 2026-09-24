@@ -18,6 +18,10 @@ const UP = 3;
 const SCORE_THRESHOLD = 2; // Distance threshold for scoring
 const DELTA_SCORE = 10; // Score increment/decrement value
 const PLAYER_ON = true; // If True, a player-controlled walker is added to the simulation
+const WALKER_SIZE = 1; // Size of the walker
+const DELTA_SIZE = WALKER_SIZE / 20; // Size increment for the walker when scoring
+const MIN_SIZE = 0.3; // Minimum size for the walker
+const MAX_SIZE = 8; // Maximum size for the  walker
 
 
 let WRAP_ENABLE = false; // If True, walkers can wrap around the screen

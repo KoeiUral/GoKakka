@@ -1,10 +1,10 @@
 /**
  * Constants for the GUI
  */
-const CELL_SIZE = 30;
 const WIN_WIDTH = 800;
 const WIN_HEIGHT = 800;
 const FRAME_SIZE = 100;
+const CELL_SIZE = 30; // Size of each cell in the grid
 const ROWS = ((WIN_HEIGHT - 2 * FRAME_SIZE) / CELL_SIZE);
 const COLS = ((WIN_WIDTH - 2 * FRAME_SIZE) / CELL_SIZE);
 

@@ -14,5 +14,5 @@ Weird puzzle game: not yet clear how to play
 - [Walker]: Make trail counts as walker in collision algo
 - [Game]: Add drop of GoKakka, in general add features dropping
 - [Gui]: Add nice random background (space, beach, sky)
-- [Walker]: Add walker size, size grows with score
+- ~~[Walker]: Add walker size, size grows with score  **DONE**~~
 - [Walker]: Add Sprite of Walker eating walker once two are closed

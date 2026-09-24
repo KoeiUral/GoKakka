@@ -29,6 +29,7 @@ class Walker {
     this.speed = speed;
     this.greedyRatio = greedy;
     this.scareRatio = scare;
+    this.size = WALKER_SIZE;
 
     /* Consmetic fields */
     this.color = color(random(255), random(255), random(255));;
@@ -157,7 +158,7 @@ class Walker {
    * Move the walker MOSTLY towards its prey.
    */
   chase() {
-    this.move(this.greedyRatio , 1 - this.greedyRatio);
+    this.move(this.greedyRatio, 1 - this.greedyRatio);
   }
 
   
@@ -173,12 +174,19 @@ class Walker {
    * its score increases by 10, if it collides with its predator, its score decreases by 10.
    */
   check() {
-    let distPrey = this.pos.dist(this.prey.pos);
-    let distPredator = this.pos.dist(this.predator.pos);
+    let distPrey = this.pos.dist(this.prey.pos) - this.size/2 - this.prey.size/2;
+    let distPredator = this.pos.dist(this.predator.pos) - this.size/2 - this.predator.size/2;
 
     if (distPrey < SCORE_THRESHOLD) {
       this.score += DELTA_SCORE;
+      this.size = (this.size > MAX_SIZE) ? MAX_SIZE : this.size + DELTA_SIZE;
     }
+
+    if (distPredator < SCORE_THRESHOLD) {
+      this.score -= DELTA_SCORE;
+      this.size = (this.size < MIN_SIZE) ? MIN_SIZE : this.size - DELTA_SIZE;
+    }
+
   }
 
   /**
@@ -245,7 +253,7 @@ class Walker {
             x = this.prevPos[i].values[0] * CELL_SIZE + FRAME_SIZE;
             y = this.prevPos[i].values[1] * CELL_SIZE + FRAME_SIZE;
             fill(this.color._getRed(), this.color._getGreen(), this.color._getBlue(), TRAIL_DELTA * i);
-            rect(x, y, CELL_SIZE);
+            rect(x, y, this.size * CELL_SIZE);
         }
     }
 
@@ -253,9 +261,8 @@ class Walker {
     x = this.pos.values[0] * CELL_SIZE + FRAME_SIZE;
     y = this.pos.values[1] * CELL_SIZE + FRAME_SIZE;
 
-    noStroke();
     fill(this.color);
-    rect(x, y, CELL_SIZE);
+    rect(x, y, this.size * CELL_SIZE);
   }
 }
 
